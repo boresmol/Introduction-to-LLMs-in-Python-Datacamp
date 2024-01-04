@@ -23,3 +23,23 @@ Los LLMs tienen un ciclo de desarrollo muy parecido a los sistemas convencionale
 * En el preentrenamiento, los modelos aprenden patrones generales de lenguaje y aprenden de un gran y variado dataset. Este proceso es computacionalmente muy costoso y el resultado es un modelo preentrenado de propósito general o también llamado *foundation model*. 
 * Este *foundation model* puede ser "afinado" (*fine-tuned*) en un dataset mas pequeño y de un dominio específico, convirtiendo un modelo general en un modelo para casos de uso y aplicaciones específicas.
 
+**4.Cómo accedes a estos *foundation models***
+Podemos acceder fácilmente a modelos LLM desde la librería Hugging Face usando Python. Hugging face provee una librería llamada *transformers* la cual ofrece una API con diferentes niveles de abstracción. El *pipeline transformers* ofrece el mayor nivel de abstracción, por lo que se convierte en la forma más sencilla de usar un LLM.
+
+Solo especificando lo que queremos hacer con el modelo, como por ejemplo, clasificación de sentimientos, el pipeline automáticamente descargará un modelo con sus pesos preentrenados. Esto podemos hacerlo simplemente con esta línea de código:
+
+```python3
+from transformers import pipeline
+sentiment_classifier = pipeline('text-classification') #aquí especificamos la tarea
+```
+
+Después, solo tenemos que pasarle la frase que queremos clasificar:
+
+```python3
+output = sentiment_classifier('Hola, soy Borja, estoy muy contento de estar escribiendo esta entrada!')
+print(output)
+```
+Nuestro pipiline mostrará su predicción:
+
+`[{'label':'POSITIVE', 'score': 0.9917237012389}]`
+
