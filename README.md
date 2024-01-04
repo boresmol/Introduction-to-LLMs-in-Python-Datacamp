@@ -75,6 +75,14 @@ print(outputs['answer'])
 A lo que el modelo devolverá:
 `41 years`
 
-
+## **6.Transformers**
+Un transformer es una arquitectura de deep learning para procesar, entender y generar texto en lenguaje humano.
+Las características que los hacen especialmente eficaces son:
+* Los transformers no usan capas recurrentes como parte de sus componentes de la red neuronal.
+* Esto permite capturar dependencias más a largo plazo que las RNNs en textos largos gracias a sus dos características principales
+** Mecanismos de atención + Positional Encoding.
+** Gracias a estos dos mecanismos los Transformers son capaces de ponderar la importancia relativa de las diferentes palabras en una frase al hacer inferencias, por ejemplo, para predecir la siguiente palabra a generar como una parte de una secuencia de salida.
+* Los tokens se procesan simultáneamente:
+** Gracias a los mecanismos de atención los Transformers son capaces de manejar los tokens simultáneamente en lugar de secuencialmente, resultando en inferencias y entrenamientos más rápidos.
 
 
