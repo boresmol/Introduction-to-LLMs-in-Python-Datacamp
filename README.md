@@ -85,5 +85,6 @@ Las características que los hacen especialmente eficaces son:
 * Los tokens se procesan simultáneamente:
 ** Gracias a los mecanismos de atención los Transformers son capaces de manejar los tokens simultáneamente en lugar de secuencialmente, resultando en inferencias y entrenamientos más rápidos.
 
-La arquitectura de un transformer es la siguiente:
+La arquitectura del transformer original [presentado en este paper](https://arxiv.org/abs/1706.03762)  es la siguiente:
 ![transformer](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/transformers.png)
+
