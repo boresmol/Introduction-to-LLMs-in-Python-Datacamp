@@ -118,5 +118,7 @@ Las arquitecturas principales de Transformers en la actualidad se dividen en 3 t
 | Encoder-only  | Clasificación de texto, QA... | BERT |
 | Decoder-only | Generación de texto, generación de QA | GPT |
 
+### **7.Attention mechanisms and positional encoding**
+
 
 
