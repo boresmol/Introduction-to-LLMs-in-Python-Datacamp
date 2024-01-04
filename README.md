@@ -75,7 +75,7 @@ print(outputs['answer'])
 A lo que el modelo devolverá:
 `41 years`
 
-## **6.Transformers**
+### **6.Transformers**
 Un transformer es una arquitectura de deep learning para procesar, entender y generar texto en lenguaje humano.
 Las características que los hacen especialmente eficaces son:
 * Los transformers no usan capas recurrentes como parte de sus componentes de la red neuronal.
@@ -85,6 +85,38 @@ Las características que los hacen especialmente eficaces son:
 * Los tokens se procesan simultáneamente:
 ** Gracias a los mecanismos de atención los Transformers son capaces de manejar los tokens simultáneamente en lugar de secuencialmente, resultando en inferencias y entrenamientos más rápidos.
 
-La arquitectura del transformer original [presentado en este paper](https://arxiv.org/abs/1706.03762)  es la siguiente:
+La arquitectura del transformer original, [presentado en este paper](https://arxiv.org/abs/1706.03762), es la siguiente:
 ![transformer](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/transformers.png)
+
+* El transformer original cuenta con dos partes principales: el *encoder* y el *decoder*.
+* Cada una de estas partes contiene varias capas replicadas de alto nivel, llamadas *Encoder layers* y *Decoder layers*
+* Dentro de cada una de estas capas de alto nivel, se aplican **Mecanismos de Atención** seguidos por capas *feed-forward* con el fin de capturar complejos patrones semánticos y dependencias en el texto.
+
+#### El primer Transformer con PyTorch
+Para crear un transformer hay que definir varios elementos estructurales:
+* `d_model`: La dimensión de los *embeddings* usados en todo el modelo para representar *inputs*, *outputs* e información intermedia.
+* `n_heads`: Los mecanismos de atención normalmente tienen varias cabezas que funcionan en paralelo, capturando diferentes tipos de dependencias. De normal se elige un número que sea divisor de la dimensión del modelo.
+* `num_encoder_layers,num_decoder_layers`: La profundidad del modelo depende del número de capas del decoder y del encoder.
+
+Un ejemplo simple y no funcional de código podría ser el siguiente:
+```python3
+import torch
+import torch.nn as nn
+
+d_model = 512
+n_heads = 8
+num_encoder_layers = 6
+num_decoder_layers = 6
+
+model = nn.Transformer(d_model = d_model, nhead = n_heads, num_encoder_layers = num_encoder_layers, num_decoder_layers = num_decoder_layers)
+```
+Las arquitecturas principales de Transformers en la actualidad se dividen en 3 tipos:
+
+| Tipo | Tareas | Modelos |
+|------------|------------|------------|
+| Encoder-Decoder  | Traducción, resumen de texto...  | T5,BART |
+| Encoder-only  | Clasificación de texto, QA... | BERT |
+| Decoder-only | Generación de texto, generación de QA | GPT |
+
+
 
