@@ -79,10 +79,10 @@ Un transformer es una arquitectura de deep learning para procesar, entender y ge
 Las características que los hacen especialmente eficaces son:
 * Los transformers no usan capas recurrentes como parte de sus componentes de la red neuronal.
 * Esto permite capturar dependencias más a largo plazo que las RNNs en textos largos gracias a sus dos características principales
-** Mecanismos de atención + Positional Encoding.
-** Gracias a estos dos mecanismos los Transformers son capaces de ponderar la importancia relativa de las diferentes palabras en una frase al hacer inferencias, por ejemplo, para predecir la siguiente palabra a generar como una parte de una secuencia de salida.
+    * Mecanismos de atención + Positional Encoding.
+    * Gracias a estos dos mecanismos los Transformers son capaces de ponderar la importancia relativa de las diferentes palabras en una frase al hacer            inferencias, por ejemplo, para predecir la siguiente palabra a generar como una parte de una secuencia de salida.
 * Los tokens se procesan simultáneamente:
-** Gracias a los mecanismos de atención los Transformers son capaces de manejar los tokens simultáneamente en lugar de secuencialmente, resultando en inferencias y entrenamientos más rápidos.
+    * Gracias a los mecanismos de atención los Transformers son capaces de manejar los tokens simultáneamente en lugar de secuencialmente, resultando en          inferencias y entrenamientos más rápidos.
 
 La arquitectura del transformer original, [presentado en este paper](https://arxiv.org/abs/1706.03762), es la siguiente:
 ![transformer](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/transformers.png)
@@ -125,7 +125,7 @@ Pero hay 'una trampa': los mecanismos de atención requieren información sobre 
 #### *Positional Encoding*
 El *positional encoding* añade información a cada toquen sobre su posición en la secuencia, superando así la limitación comentada anteriormente. Pero, ¿Cómo funciona?
 * Dado un token transformado a *embedding* que llamaremos 'E', se crea un vector con valores que describen la posición del token en la secuencia.
-** Estos valores se crean únicamente utilizando funciones seno y coseno.
+    * Estos valores se crean únicamente utilizando funciones seno y coseno.
 * Después, añadimos este token codificado al *embedding*.
 * Una vez hecho esto, el token ya está listo para ser procesado por el mecanismo de atención.
 
@@ -164,11 +164,11 @@ class PositinalEncoder(nn.Module):
 Los mecanismos *Self Attention* ayudan a los Transformers a entender las interrelaciones que existen entre las palabras de una secuencia. Gracias a esto, el modelo puede centrarse en las palabras más importantes para una tarea dada. Vamos a explicar como funcionan estos mecanismos:
 
 * Dada una secuencia de *n* tokens proyectados en un embbeding
-** Cada embedding es proyectado en 3 matrices de misma dimensión: *Query, Key y Values*.
-** Aplicando por separado a cada matriz transformaciones lineales, cada una aprende unos pesos durante el entrenamiento.
-** Después, se aplica el producto escalar (*dot product*) o la similaridad de coseno entre cada par de *query-key* en una secuencia para crear una matriz de puntuaciones de atención de cada palabra.
-** Una vez calculada la matriz de *attention scores*, aplicamos una softmax con el fin de dar una ponderación a estos *scores*, obteniendo así la *attention weights matrix*.
-** Después, esta matriz de pesos se multiplica por la matriz *Values* con el fin de obtener un *token embbeding* actualizado con la información relevante de la secuencia.
+    * Cada embedding es proyectado en 3 matrices de misma dimensión: *Query, Key y Values*.
+    * Aplicando por separado a cada matriz transformaciones lineales, cada una aprende unos pesos durante el entrenamiento.
+    * Después, se aplica el producto escalar (*dot product*) o la similaridad de coseno entre cada par de *query-key* en una secuencia para crear una             matriz de puntuaciones de atención de cada palabra.
+    * Una vez calculada la matriz de *attention scores*, aplicamos una softmax con el fin de dar una ponderación a estos *scores*, obteniendo así la              *attention weights matrix*.
+    * Después, esta matriz de pesos se multiplica por la matriz *Values* con el fin de obtener un *token embbeding* actualizado con la información relevante de la secuencia.
 
 ![scale_dot_product](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/scale_dot_product.png)
 
