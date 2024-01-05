@@ -171,5 +171,8 @@ Los mecanismos *Self Attention* ayudan a los Transformers a entender las interre
 ** Una vez calculada la matriz de *attention scores*, aplicamos una softmax con el fin de dar una ponderación a estos *scores*, obteniendo así la *attention weights matrix*.
 ** Después, esta matriz de pesos se multiplica por la matriz *Values* con el fin de obtener un *token embbeding* actualizado con la información relevante de la secuencia.
 
-![scale_dot_product](
+![scale_dot_product](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/scale_dot_product.png)
+
+Este mecanismo de atención solo tiene una cabeza de atención. En la práctica, los Transformers paralelizan múltiples cabezas de atención con el fin de aprender diferentes aspectos semánticos de la oración. Esto se llama *Multi-Headed Attention* y el principio subyacente es similar al de los filtros de las CNNs. Las *Multi-Head Attention* concatenan sus *outputs* y los proyectan linealmente para mantener un *embedding* de dimensiones consistentes.
+
 
