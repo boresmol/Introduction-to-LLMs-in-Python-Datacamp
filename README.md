@@ -119,6 +119,14 @@ Las arquitecturas principales de Transformers en la actualidad se dividen en 3 t
 | Decoder-only | Generación de texto, generación de QA | GPT |
 
 ### **7.Attention mechanisms and positional encoding**
-
+#### *Attention mechanisms**
+Los mecanismos de atención son una pieza clave en el éxito de los Transformers. Anteriores arquitecturas como las RNNs normalmente procesaban secuencias token a token, siendo exitosas capturando los tokens procesados recientemente pero fallando en la captura de relaciones de largo alcance. Los mecanismos de atención consiguen superar esa limitación.
+Los Transformers usan una estructura de atención llamada *self attention*, la cual pondera con pesos la importancia de todos los tokens en una secuencia **simultáneamente**. 
+Pero hay 'una trampa': los mecanismos de atención requieren información sobre la posición de cada token en la secuencia. 
+#### *Positional Encoding*
+El *positional encoding* añade información a cada toquen sobre su posición en la secuencia, superando así la limitación comentada anteriormente. Pero, ¿Cómo funciona?
+* Dado un token transformado a *embedding* que llamaremos 'E', se crea un vector con valores que describen la posición del token en la secuencia.
+** Estos valores se crean únicamente utilizando funciones seno y coseno.
+* Después, añadimos este token codificado al *embedding*.
 
 
