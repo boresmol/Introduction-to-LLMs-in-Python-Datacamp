@@ -128,5 +128,8 @@ El *positional encoding* añade información a cada toquen sobre su posición en
 * Dado un token transformado a *embedding* que llamaremos 'E', se crea un vector con valores que describen la posición del token en la secuencia.
 ** Estos valores se crean únicamente utilizando funciones seno y coseno.
 * Después, añadimos este token codificado al *embedding*.
+* Una vez hecho esto, el token ya está listo para ser procesado por el mecanismo de atención.
+
+![pos_encoding](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/pos_enc.png)
 
 
