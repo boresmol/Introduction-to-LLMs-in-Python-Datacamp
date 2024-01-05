@@ -155,6 +155,13 @@ class PositinalEncoder(nn.Module):
       pe[:,1::2] = torch.cos(position * div_term)
       pe = pe.unesqueeze(0) #el unesqueeze se usa para transformar al tamaño del batch
       self.register_buffer('pe',pe)
+
+  def forward(self,x): # este método añade el positional encoding a toda la secuencia del embedding
+      x = x + self.pe[:, :x.size(1)]
+      return x
 ```
+
+#### *Anatomía de los mecanismos Self Attention*
+
 
 
