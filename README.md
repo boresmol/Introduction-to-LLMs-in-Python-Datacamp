@@ -13,7 +13,7 @@ Los LLMs son sistemas de inteligencia artificial capaces de entender y generar t
 Este tipo de modelos se han hecho tan populares y gozan de gran eficacia y precisión debido a varios factores:
 
 * Están basados en arquitecturas de Deep Learning, comunmente en *Transformers*
-    ** Este tipo de arquitecturas han demostrado excepcionales resultados capturando complejos patrones en datos de texto
+            * Este tipo de arquitecturas han demostrado excepcionales resultados capturando complejos patrones en datos de texto
 * Los LLMs han conseguido avances significativos en tareas de NLP tales como generación de texto, QA...
 * Su naturaleza 'Large': Profundas redes neuronales con una cantidad ingente de parámetros entrenables entrenados en enormes corpus de texto.
 
