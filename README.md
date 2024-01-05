@@ -237,3 +237,87 @@ El encoder del Transformer tiene dos componentes principales:
     * *Skip connections*
     * Droputs
     * *Transformer head*: Capa final del modelo. Está diseñado para producir resultados específicos de la tarea. En los transformers con solo encoder es                              típico que estas tareas sean clasificar o predecir algo.
+
+  ![encoder](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/encoder_transformer.png)
+
+  #### Subcapa Feed Forward en la capa del Encoder
+Nuestra capa "*FeedForwardSublayer*" contendrá 2 fully-connected + ReLU. Para programar esta clase, usaremos los siguientes parámetros:
+* `d_ff`:dimension entre las capas lineales. Es bueno que sea diferente a la dimensión del embedding para facilitar aún más la captura de patrones          
+         complejos.
+* `forward()`: fuynción que procesa los outputs de atención para capturar patrones complejos y no lineales
+
+```python3
+class FeedForwardSubLayer(nn.Module):
+   def __init__(self,d_model,d_ff):
+      super(FeedForwardSubLayer, self).__init__()
+      self.fc1 = nn.Llinear(d_model,d_ff)
+      self.fc2 = nn.Llinear(d_model,d_ff)
+      self.relu = nn.ReLU()
+
+   def forward(self,x):
+      return self.fc2(self.relu(self.fc1(x)))
+```
+#### Encoder Layer
+Finalmente, el encoder layer, como antes se ha comentado, lo compondrán las capas *Feed Forward* junto con las *Multi-headed self-attention*:
+
+```python3
+class EncoderLayer(nn.Module):
+   def __init__(self,d_model,num_heads,d_ff,dropout):
+      super(EncoderLayer,self).__init__()
+      self.self_attn = MultiHeadAttention(d_model,num_heads)
+      self.feed_forward = FeedForwardSubLayer(d_model,d_ff)
+      self.norm1 = nn.LayerNorm(d_model)
+      self.norm2 = nn.LayerNorm(d_model)
+      self.dropout = nn.Dropout(dropout)
+
+   def forward(self,x,mask): # Este metodo pasa los datos por en encoder layer
+      attn_output = self.self_attn(x,x,x,mask)
+      x = self.norm1(x + self.dropout(attn_output)
+      ff_output = self.feed_forward(x)
+      x = self.norm2(x + self.dropout(ff_output))
+      return x
+```
+Como podemos ver, durante el paso hacia delante, se usa una máscara. Esto se hace para evitar el procesamiento de fichas de relleno. A continuación se explica su funcionamiento:
+
+#### *Masking* the attention process
+En tareas de NLP donde las secuencias de entrada tienen diferentes longitudes, el *padding* garantiza la igualdad de la longitud en secuencias para un procesamiento por *batches* óptimo, agregando tokens de relleno especiales.
+Sin embargo, el mecanismo de atención no debería fijarse en esos tokens de relleno, ya que estos no contienen información relevante para la tarea lingüistica. Es por eso que se usa una máscara de relleno con ceros para las posiciones rellenadas en la secuencia.
+
+#### *Transformer body*
+Una vez que hemos definido el *encoder layer*, apilamos varios de estos para definir el cuerpo del Transformer:
+```python3 
+class TransformerEncoder(nn.Module)
+   def __init__(self, vocab_size, d_model, num_layers, num_heads, d_ff, dropout, max_sequence_length):
+      super(TransformerEncoder, self).__init__()
+      self.embbeding = nn.Embedding(vocab_size, d_model)
+      
+      self.positional_encoding = PositionalEncoding(d_model, max_sequence_length)
+      self.layers = nn.ModuleList([EncoderLayer(d_model, num_heads, d_ff, dropout) for _ in range (num_layers)])
+
+   def forward(self,x,mask):
+      x = self.embedding(x)
+      x = self.positional_encoding(x)
+      for layer in self.layers:
+      x = layer(x,mask)
+```
+
+#### *Transformer Head*
+Vamos a presentar una cabeza de transformer para tareas de clasificación tales como clasificación de texto, de análisis de sentimiento...
+Simplemente consiste en una última capa lineal completamente conectada que mapea los estados ocultos del codificador en probabilidades de clase, con la ayuda de una función softmax.
+
+```python3
+class ClassifierHead(nn.Module):
+   def __init__(self, d_model, num_classes):
+      super(ClassifierHead,self).__init__()
+      self.fc = nn.Linear(d_model, num_classes)
+   
+   def forward(self,x):
+      logits = self.fc(x)
+      return F.log_soft_max(logits, dim = -1)
+```
+
+
+      
+
+      
+  
