@@ -171,4 +171,5 @@ Los mecanismos *Self Attention* ayudan a los Transformers a entender las interre
 ** Una vez calculada la matriz de *attention scores*, aplicamos una softmax con el fin de dar una ponderación a estos *scores*, obteniendo así la *attention weights matrix*.
 ** Después, esta matriz de pesos se multiplica por la matriz *Values* con el fin de obtener un *token embbeding* actualizado con la información relevante de la secuencia.
 
+![scale_dot_product](
 
