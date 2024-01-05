@@ -210,4 +210,19 @@ class MultiHeadAttention(nn.Module):
           scores = scores.masked_fill(mask == 0, float("-1e9"))
         attention_weights = F.softmax(scores, dim=-1)
         return attention_weights
+
+    def forward(self, query, key, value, mask=None):
+        batch_size = query.size(0)
+
+        query = self.split_heads(self.query_linear(query),batch_size)
+        key = self.split_heads(self.key_linear(key),batch_size)
+        value = self.split_heads(self.value_linear(value),batch_size)
+
+        attention_scores = self.compute_attention(query, key, mask)
+
+        output = torch.matmul(attention_scores, value)
+        output = output.view(batch_size, self.num_heads, -1, self.head_dim).permute(0,2,1,3).contiguous().view(batch_size, -1, self.d_model)
+
+        return self.output_linear(output)
+
 ```
