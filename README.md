@@ -226,3 +226,14 @@ class MultiHeadAttention(nn.Module):
 
 ```
 ### **8.Creando un Encoder de un Transformer**
+La estructura original de los Transformers combina un encoder y un decoder para la compresión y generación de lenguajes de secuencia a secuencia.
+Los Transformers que solo usan encoder simplifican la arquitectura original para escenarios donde el objetivo principal es comprender y representar los datos de entrada en lugar de generar secuencias.
+El encoder del Transformer tiene dos componentes principales:
+* *Transformer body*: Es un stack de múltiples capas de encoder para aprender patrones complejos en los datos del lenguaje.
+* *Encoder layer*: Cada capa del encoder incluye:
+    * *Multi-head self-attention* : para capturar las relaciones entre los distintos componentes de las secuencias
+    * *Feed Forward Layers*: Para mapear el conocimiento de las capas de atención en representaciones abstractas no lineales.
+    * Capas de normalización
+    * *Skip connections*
+    * Droputs
+    * *Transformer head*: Capa final del modelo. Está diseñado para producir resultados específicos de la tarea. En los transformers con solo encoder es                              típico que estas tareas sean clasificar o predecir algo.
