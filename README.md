@@ -132,4 +132,29 @@ El *positional encoding* añade información a cada toquen sobre su posición en
 
 ![pos_encoding](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/pos_enc.png)
 
+Para crear una clase *Positional Encoder* en Python, tenemos los siguientes argumentos:
+* `max_seq_length`: máxima longitud de la secuencia
+* `d_model`: Dimensión del embedding del transformer
+* `pe`: *Positional encoding matrix*
+* `position`: indice de la posición en la secuencia
+* `div_term`: término para escalar los índices de las posiciones
+
+En cuanto al código, tendríamos algo similar a lo siguiente:
+```python3
+class PositinalEncoder(nn.Module):
+  def __init__(self, d_model,max_seq_length = 512):
+      super(PositionalEncoder,self).__init__()
+      self.d_model = d_model
+      self.max_seq_length = max_seq_length
+
+      pe = torch.zeros(max_seq_length,d_model)
+      position = torch.arange(0,max_seq_length, dtype = torch.float).unsqueeze(1)
+
+      div_term = torch.exp(torch.arange((0,d_model, 2, dtype=torch.float) * -(math.log(10000.0) / d_model))
+      pe[:,0::2] = torch.sin(position * div_term)
+      pe[:,1::2] = torch.cos(position * div_term)
+      pe = pe.unesqueeze(0) #el unesqueeze se usa para transformar al tamaño del batch
+      self.register_buffer('pe',pe)
+```
+
 
