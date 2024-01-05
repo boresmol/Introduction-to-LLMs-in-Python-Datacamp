@@ -225,3 +225,4 @@ class MultiHeadAttention(nn.Module):
         return self.output_linear(output)
 
 ```
+### **8.Creando un Encoder de un Transformer**
