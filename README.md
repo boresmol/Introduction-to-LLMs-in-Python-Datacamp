@@ -119,7 +119,7 @@ Las arquitecturas principales de Transformers en la actualidad se dividen en 3 t
 | Decoder-only | Generación de texto, generación de QA | GPT |
 
 ### **7.Attention mechanisms and positional encoding**
-#### *Attention mechanisms**
+#### *Attention mechanisms*
 Los mecanismos de atención son una pieza clave en el éxito de los Transformers. Anteriores arquitecturas como las RNNs normalmente procesaban secuencias token a token, siendo exitosas capturando los tokens procesados recientemente pero fallando en la captura de relaciones de largo alcance. Los mecanismos de atención consiguen superar esa limitación.
 Los Transformers usan una estructura de atención llamada *self attention*, la cual pondera con pesos la importancia de todos los tokens en una secuencia **simultáneamente**. 
 Pero hay 'una trampa': los mecanismos de atención requieren información sobre la posición de cada token en la secuencia. 
@@ -162,6 +162,13 @@ class PositinalEncoder(nn.Module):
 ```
 
 #### *Anatomía de los mecanismos Self Attention*
+Los mecanismos *Self Attention* ayudan a los Transformers a entender las interrelaciones que existen entre las palabras de una secuencia. Gracias a esto, el modelo puede centrarse en las palabras más importantes para una tarea dada. Vamos a explicar como funcionan estos mecanismos:
 
+* Dada una secuencia de *n* tokens proyectados en un embbeding
+** Cada embedding es proyectado en 3 matrices de misma dimensión: *Query, Key y Values*.
+** Aplicando por separado a cada matriz transformaciones lineales, cada una aprende unos pesos durante el entrenamiento.
+** Después, se aplica el producto escalar (*dot product*) o la similaridad de coseno entre cada par de *query-key* en una secuencia para crear una matriz de puntuaciones de atención de cada palabra.
+** Una vez calculada la matriz de *attention scores*, aplicamos una softmax con el fin de dar una ponderación a estos *scores*, obteniendo así la *attention weights matrix*.
+** Después, esta matriz de pesos se multiplica por la matriz *Values* con el fin de obtener un *token embbeding* actualizado con la información relevante de la secuencia.
 
 
