@@ -175,4 +175,39 @@ Los mecanismos *Self Attention* ayudan a los Transformers a entender las interre
 
 Este mecanismo de atención solo tiene una cabeza de atención. En la práctica, los Transformers paralelizan múltiples cabezas de atención con el fin de aprender diferentes aspectos semánticos de la oración. Esto se llama *Multi-Headed Attention* y el principio subyacente es similar al de los filtros de las CNNs. Las *Multi-Head Attention* concatenan sus *outputs* y los proyectan linealmente para mantener un *embedding* de dimensiones consistentes.
 
+![multi_head_attention](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/multi_head_attention.png)
 
+La clase *Multi Head Attention* en PyTorch tiene los siguientes argumentos y funciones:
+* `num_heads` número de cabezas de atención, cada uno maneja embeddings de tamaño `head_dims`
+* `nn.Linear()`: Establecer transformaciones lineales para entradas de atención y salida.
+* `split_heads()`: Parte el input en las diferentes cabezas de atención con los tamaños de tensor correctos
+* `compute_attention()`: computa los pesos de atención usando la *softmax*
+
+El código es el siguiente:
+```python3
+import torch.nn as nn
+import torch.nn.functional as F
+
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, num_heads):
+        super(MultiHeadAttention, self).__init__()
+        self.num_heads = num_heads
+        self.d_model = d_model
+        self.head_dim = d_model // num_heads
+
+        self.query_linear = nn.Linear(d_model, d_model)
+        self.key_linear = nn.Linear(d_model, d_model)
+        self.value_linear = nn.Linear(d_model, d_model)
+        self.output_linear = nn.Linear(d_model,d_model)
+
+    def split_heads(self, x, batch_size):
+        x = x.view(batch_size, -1, self.num_heads, self.head_dim)
+        return x.permute(0,2,1,3).contiguous().view(batch_size * self.num_heads, -1, self.head_dim)
+
+    def compute_attention(self, query, key, mask = None):
+        scores = torch.matmul(query, key.permute(1,2,0))
+        if mask is not None:
+          scores = scores.masked_fill(mask == 0, float("-1e9"))
+        attention_weights = F.softmax(scores, dim=-1)
+        return attention_weights
+```
