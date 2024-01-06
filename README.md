@@ -336,8 +336,36 @@ Esto es clave para aportarle al modelo un comportamiento autorregresivo o causal
 Al pasar esta matriz a la cabeza de atención, cada token en la secuencia solo presta atención a la información "pasada" en su lado izquierdo.
 
 En el siguiente ejemplo, durante el entrenamiento, el token "favourite" en la secuencia "Orange is my favourite fruit." solo prestaría atención a las fichas anteriores: orange, is, my y favourite. 
+
 ![masked_self_attention](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/mask_self_attention.png)
 
-De este modo, durante la inferencia, el modelo aprenderá que en 
-      
+De este modo, durante la inferencia, el modelo aprenderá que en secuencias como estas, la siguiente palabra a generar podría ser "fruit".
+El uso de estas máscaras no requiere modificar el mecanismo de autoatención de múltiples cabezas que se implementó para arquitecturas de tipo *Encoder Only*. En cambio, una vez definida toda la arquitectura, simplemente creamos una máscara triangular que se pasará al modelo junto con la secuencia de entrada:
+
+```python3
+self_attention_mask = (1-torch.triu(torch.ones(1,sequence_length, sequence_length), diagonal = 1)).bool()
+(...)
+output = decoder(input_sequence, self_attention_mask)
+```
+En cuanto a la clase del Decoder, se puede implementar tanto fuera como dentro de la clase de cuerpo del Transformador. 
+```python3
+Class DecoderOnlyTransformer(nn.Module):
+   def __init__(self,vocab_size, d_model,num_layers,num_heads,d_ff,dropout,max_sequence_length):
+      super(TransformerDecoder,self).__init__()
+      self.embedding = nn.Embedding(vocab_size, d_model)
+      self.positional_encoding = PositionalEncoding(d_model, max_sequence_length)
+      self.layers = nn.ModuleList([DecoderLayer( d_model, num_heads,  d_ff, dropout) for _ in range(num_layers)])
+      self.fc = nn.Linear(d_model,vocab_size)
+   
+   def forward (self,x,self_mask):
+      x = self.embedding(x)
+      x = self.positional_encoding(x)
+      for layer in self.layers:
+         x= layer(x,self_mask)
+      x = self.fc(x)
+      return F.log_softmax(x,dim=-1)
+```
+
+
+
   
