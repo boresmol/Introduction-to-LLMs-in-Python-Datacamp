@@ -336,6 +336,8 @@ Esto es clave para aportarle al modelo un comportamiento autorregresivo o causal
 Al pasar esta matriz a la cabeza de atención, cada token en la secuencia solo presta atención a la información "pasada" en su lado izquierdo.
 
 En el siguiente ejemplo, durante el entrenamiento, el token "favourite" en la secuencia "Orange is my favourite fruit." solo prestaría atención a las fichas anteriores: orange, is, my y favourite. 
+![masked_self_attention](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/mask_self_attention.png)
+
 De este modo, durante la inferencia, el modelo aprenderá que en 
       
   
