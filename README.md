@@ -316,7 +316,16 @@ class ClassifierHead(nn.Module):
       return F.log_soft_max(logits, dim = -1)
 ```
 
-
+### **9.Creando un *Decoder Transformer***
+La versión *decoder-only* es una versión simplificada de la arquitectura original del Transformer especializada en tareas de generación de secuencias que no requieren *encoder*. 
+Concretamente, este tipo de arquitecturas están diseñadas para manejar tareas autorregresivas de generación de secuencias tales como generación y finalización de texto.
+La estructura es muy similar a la de un *encoder-only* exceptuando dos diferencias:
+* El uso de *Masked multi-head self-attention*: Esto ayuda al modelo a especializarse en predecir la siguiente palabra en una secuencia paso a paso, generar de forma iterativa mensajes, respuestas o cualquier texto como lo hacen los LLMs autorregresivos.
+    * *Upper triangular mask*: Para cada token en la secuencia objetivo, solo se observan los tokens generados previamente, mientras que las fichas    
+                               posteriores se ocultan mediante el uso de una máscara triangular superior (*Upper triangular mask*) que impide atender a                                    posiciones futuras.
+* La otra diferencia radica en el *Transformer Head*: Normalmente en esta arquitectura se trata de una capa con activación softmax sobre todo el       
+                                                      vocabulario apra estimar la probabilidad de que cada palabra o token sea el siguiente en generarse y 
+                                                      devuelva el más probable.
       
 
       
