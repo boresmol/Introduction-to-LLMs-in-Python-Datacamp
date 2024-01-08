@@ -689,8 +689,10 @@ Las métricas que se usan en cada tipo de tarea son:
 ![metr](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/metricas.png)
 
 Algunas de las métricas para tareas especiales de LLM son:
-* *Perplejidad*: es una métrica usada para evaluar LLM autorregresivos, como los de generación de texto. Mide la capacidad del modelo para predecir la                       siguiente palabra con precisión y confianza. El rango va de `[0, inf)` y cuando más bajo mejor. Se calcula mediante las distribuciones                      logit de salida devueltas por el modelo
+* *Perplejidad*: es una métrica usada para evaluar LLM autorregresivos, como los de generación de texto. Mide la capacidad del modelo para predecir la                       siguiente palabra con precisión y confianza. El rango va de `[0, inf)` y cuando más bajo mejor. Se calcula mediante las distribuciones                      logit de salida devueltas por el modelo. Cuando se pasan múltiples predicciones de texto generadas, es frecuente evaluar la perplejidad                     promedio de las mismas. El código python es el siguiente:
     * ```python3
       perplexity = evaluate.load('perplexity', module_type = 'metric')
       results = perplexity.compute(model_id='gpt2', predictions = generated_text)
-      ' ' '  
+      ```
+* *ROUGE score* en resúmenes de texto: Cuantifica la superposición y similitud entre un texto resumido generado por el modelo y resúmenes de referencia proporcionados. Presta atención a aspectos como la co-ocurrencia de n-gramas o grupos de tokens consecutivos y la superposición de palabras. Rouge toma una colección de resúmenes previstos o resultados de LLM, como así uno o varios resúmenes de referencia proporcionados por humanos. ROUGE proporciona un conjunto de puntuaciones métricas que capturan diferentes aspectos de similitud del texto, como superposición de unigramas y bigramas, subsecuencias comunes más largas...
+* *BLEU score* para traducción: mide la calidad de la traducción entre la salida del LLM y referencias humanas.
