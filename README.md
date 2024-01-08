@@ -441,4 +441,57 @@ class Transformer(nn.Module):
       return decoder_output
 ```
 
+### ** 11. LLMs para clasificación y generación de texto **
+Hemos realizado esto anteriormente con la interfaz `pipeline()`, cuya simplicidad permite utilizar LLMs con muy pocas líneas de código, seleccionando automáticamente un modelo y un tokenizador adecuados.  
+Sin embargo, este alto nivel de bastracción permite un menor control y personalización.
+La clase `AutoModel` es una alternativa más flexible y personalizable para aporvechar los LLM previamente entrenados. 
+
+Aquí podemos ver un ejemplo de como podemos usar dos clases de `Automodel` comunes en la biblioteca `transformers`de `HuggingFace`
+```python3
+import torch.nn as nn
+from transformers import AutoModel, AutoTokenizer
+
+model_name = "bert-based-uncased"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModel.from_pretrained(model_name)
+
+text = 'Soy un ejemplo de secuencia para clasficiación de texto'
+
+class SimpleClassifier(nn.Module):
+   def __init__(self, input_size, num_classes):
+      super(SimpkleClassifier, self).__input__()
+      self.fc = nn.Linear(input_size, num_classes)
+   
+   def_forward(self, x):
+      return self.fc(x)
+```
+`AutoModel`es una clase genérica que, cuando se le pasan algunas entradas para inferencia, devuelve los estados ocultos producidos por el cuerpo del modelo, pero carece de un encabezado específico para la tarea. Por lo tanto, debemos incluirlo nosotros mismos.
+
+Los pasos serían los siguientes:
+* *tokenize* los inputs
+* Obtener los estados ocultos del modelos en los `outputs`:
+    * `pooler_outputs`: representación agregada de la secuecnia
+    * `last_hidden_states`: Estados ocultos desagregados
+    *  Forward pass a través de una cabeza de clasificación para obtener la probabilidad de clase.
+```python3
+inputs = tokenizer(text, return_tensors = 'pt', padding = True, truncation = True, max_length = 64)
+output = model(**inputs)
+pooled_output = outputs.pooler_output
+
+print('Hidden states size: ' , outputs.last_hidden_state.shape)
+print('Pooled output size' , pooled:output.shape)
+```
+`Hidden states size: torch.Size([1,11,768])`
+`Pooled output size: torch.Size([1,768])` 
+
+```python3
+classifier_head = SimpleClassifier(pooled_output.size(-1), num_classes = 2)
+logits = classifier_head(pooled_output)
+probs = torch-softmax(logits, dim = 1)
+print(Predicted Class Probabilities:', porbs)
+```
+`Predicted Class Probabilities: tensor([[0.4334, 0.5666]], grad_fn = <SoftmaxBackward0>)`
+
+
+
 
