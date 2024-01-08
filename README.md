@@ -535,3 +535,33 @@ La secuencia objetivo o *label* es la misma que la de entrada pero desplazada en
 
 Por ejemplo:
 
+![ejemplo-dato](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/ejemplo_dato.png)
+
+### ** 13. LLMs para resumen y traducción de texto **
+En este capítulo se va a explorar el resumen y la traducción de texto mediante LLMs.
+
+##### Resumen de texto
+
+En el caso de ** resumen de texto ** el obejtivo es generar un resumen de un texto de entrada, preservando información importante sobre su significado. Entrenar un modelo para esta tarea requiere pares de *input-target* donde tanto la entrada como el target son secuencias que contienen un texto original y su texto resumido asociado. Hay dos tipos de procesos de resumen:
+* Resumen extractivo: selecciona, extrae y combina partes del texto original para crear un resumen, utilizando modelos de codificador, como BERT.
+* Resumen abstractivo: se basa en LLM de secuencia a secuencia (seq2seq son modelos usados para abordar tareas en las que la longitud de entrada y salida                          no son iguales) para generar (palabra por palabra) un resumen que puede utilizar palabras y estructuras de oraciones diferentes a                           las del texto original.
+
+```python3
+from transformer import AutoTokenizer, AutoModelForSeq2SeqLM
+
+model_name = 't5-small'
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelSeq2SeqLM.from_pretrained(model_name)
+
+input_ids = tokenizer.encode('summarize: ' + example['Article'], return_tensor = 'pt', max_length = 512, truncation = True)
+
+summary_ids = model.generate(input_ids, max_length = 150)
+summary = tokenizer.decode(summary_ids[0], skip_special_tokens = True)
+```
+
+##### Language Translation
+El objetivo de esta tarea es producir una versión traducida de un texto, manteniendo el mismo significado y preservando el contexto.
+Los datos que se utilizan son pares *input-target* donde el input es el texto en el idioma original y el target es el texto en el idioma destino. 
+La traducción normalmente es posible ghracias a modelos *encoder-decoder* como el Transformer original. 
+La secuencia original (*inpiut*) está codificada en una representación numérica, que el decodificador mapeará a una traducción del lenguaje destino.
+
