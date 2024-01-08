@@ -565,3 +565,18 @@ Los datos que se utilizan son pares *input-target* donde el input es el texto en
 La traducción normalmente es posible ghracias a modelos *encoder-decoder* como el Transformer original. 
 La secuencia original (*inpiut*) está codificada en una representación numérica, que el decodificador mapeará a una traducción del lenguaje destino.
 
+![traduccion](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/traduccion.png)
+
+```python3
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+
+model_name = 'Helsinki-NLP/opus-mt-en-cy'
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+
+input_seq = "2 regulations under section 1: supplementary"
+input_ids = tokenizer.encode(input_seq, return_tensors='pt')
+translated_ids = model-generate(input_ids)
+translated_text = tokenizer.decode(translated_ids[0], skip_special_tokens = True)
+```
+
