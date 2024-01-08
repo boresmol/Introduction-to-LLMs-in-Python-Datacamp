@@ -365,7 +365,12 @@ Class DecoderOnlyTransformer(nn.Module):
       x = self.fc(x)
       return F.log_softmax(x,dim=-1)
 ```
+### ** 10.Construcción de un *encoder-decoder transformer* **
 
+Ya hemos visto como se construyen tanto el *encoder* como el *decoder* pero, ¿Cómo unimos estas dos arquitecturas? La respuesta es otra variante del mecanismo de autoatención, llamado *Cross-atention o Encoder-Decoder attention*, que se agrega en cada capa del decodificador después de la atención enmascarada. Este componente toma dos inputs:
+* La información procesada a través del decodificador
+* Los estados ocultos producidos por el codificador
+Esto es crucial para que el *decoder* 'mire hacia atrás' a la entrada para determinar que generar a continuación en la secuencia objetivo. 
 
 
   
