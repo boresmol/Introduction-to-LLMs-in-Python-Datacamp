@@ -685,3 +685,12 @@ A partir de ahora nos centraremos principalmente en el paquete `Metric`.
 * `.compute(etiquetas_reales, predicciones)`se usa para computar la métrica
 
 Las métricas que se usan en cada tipo de tarea son:
+
+![metr](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/metricas.png)
+
+Algunas de las métricas para tareas especiales de LLM son:
+* *Perplejidad*: es una métrica usada para evaluar LLM autorregresivos, como los de generación de texto. Mide la capacidad del modelo para predecir la                       siguiente palabra con precisión y confianza. El rango va de `[0, inf)` y cuando más bajo mejor. Se calcula mediante las distribuciones                      logit de salida devueltas por el modelo
+    * ```python3
+      perplexity = evaluate.load('perplexity', module_type = 'metric')
+      results = perplexity.compute(model_id='gpt2', predictions = generated_text)
+      ' ' '  
