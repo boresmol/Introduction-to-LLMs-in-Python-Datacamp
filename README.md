@@ -387,12 +387,58 @@ class DecoderLayer(nn.Module):
    def forward(self, x, y, causal_mask, cross_mask):
       self_attn_output = self.self_attn(x,x,x, causal_mask)
       x = self.norm1(x + self.dropout(self_attn_output)
-      cross_attn_output = self.cross_attn(x, y, y, cross_mask)
+      cross_attn_output = self.cross_attn(x, encoder_output, encoder_output, cross_mask)
       x = self.norm2(x + self.dropout(cross_attn_output)
       ...
 ```
 En definitiva, la arquitectura *encoder-decoder Transformer* queda así:
 
+![encoder-decoder-transf](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/encoder-decoder-transf.png)
+
+Un último aspecto importante a considerar es el papel de las entradas del *decoder*, llamadas *output embeddings*.
+El *decoder* solo necesita tomar secuencias objetivo reales durante el tiempo de entrenamiento. En tareas de traducción, esto serían ejemplos de traducciones asociados con las secuencias del idioma de origen enviadas al codificador.
+
+Las palabras en la secuencia objetivo actúan como nuestras etiquetas de entrenamiento durante el proceso de generación de la siguiente palabra.
+
+En el momento de la inferencia, el *decoder* asume el papel de generar una secuencia objetivo, comenzando con un *output embedding* vacío y tomando gradualmente como entradas las palabras objetivo que está generando sobre la marcha. 
+
+Vamos a ver un ejemplo de código **simplificado**:
+```python3
+class PositionalEncoding(nn.Module):
+...
+class MultiHeadAttention(nn.Module):
+...
+class FeedForwardSubLayer(nn.Module):
+...
+class EncoderLayer(nn.Module):
+...
+class DecoderLayer(nn.Module):
+...
+```
+
+```python3
+class TransformerEncoder(nn.Module):
+...
+class TransformerDecoder(nn.Module):
+...
+class ClassificationHead(nn.Module):
+...
+```
+Una vez que todas las clases de componentes estén definidos, podemos creas una clase `Transformer`que encapsule todo:
+
+```python3
+class Transformer(nn.Module):
+   def __init__(self, vocab_size, d_model, num_heads, num_layers, d_ff, max_seq_len, dropout):
+      super(Transformer, self).__init__()
+      
+      self.encoder = TransformerEncoder(vocab_size, d_model, num_heads, num¨_layers, num_heads, d_ff, max_seq_len, dropout)
+      self.decoder = TRansformerDecoder(vocab_size, d_model, num_heads, num_layers, num_heads, d_ff, max_seq_len, dropout)
+      
+   def forward(self, src, src_mask, causal_mask):
+      encoder_output = self.encoder(src, src_mask)
+      decoder_output = self.deocder(src, encoder_output, causal_mask, mask)
+      
+      return decoder_output
+```
 
 
-  
