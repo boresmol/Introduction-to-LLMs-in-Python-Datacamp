@@ -673,3 +673,15 @@ model.save_pretrained('./my_bert_finetuned')
 tokenizer.save_pretrained('./my_tokenizer_finetuned')
 ```
 
+### **16.Métricas para la evaluación de LLMs**
+En esta sección se explorarán métricas y pautas para la evaluación de LLMs. La biblioteca `Evaluate` de `Hugging Face``proporciona una serie de métricas muy útiles para evaluar el rendimiento de este tipo de modelos. La librería contiene 3 métodos:
+* `Metric`: una colección de métricas para evaluar el rendimiento del modelo.
+* `Comparison` : un conjunto de herramientas para comprar y medir diferencias entre modelos.
+* `Measurement`: Centrado en evaluar y obtener información a partir de conjuntos de datos lingüisticos
+
+A partir de ahora nos centraremos principalmente en el paquete `Metric`.
+* el atributo `.features`de una métrica nos da información de las entradas necesarias para su cálculo
+* `.load("metrica")`se usa para cargar una métrica concreta
+* `.compute(etiquetas_reales, predicciones)`se usa para computar la métrica
+
+Las métricas que se usan en cada tipo de tarea son:
