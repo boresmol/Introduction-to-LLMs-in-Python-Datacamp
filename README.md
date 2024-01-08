@@ -492,6 +492,46 @@ print(Predicted Class Probabilities:', porbs)
 ```
 `Predicted Class Probabilities: tensor([[0.4334, 0.5666]], grad_fn = <SoftmaxBackward0>)`
 
+Algunos modelos de `AutoModel`aceptan modelos preconfigurados con un cabezal para tareas específicas, lo que elimina la necesidad de agregarlo manualmente:
 
+```python3
+from trasnnformers import AutoModelForSequenceClassification, AutoTokenizer
 
+model_name = "nlptown/bert-base-multilingual-uncased-sentiment"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutomodelForSequenceClassification.from_pretrained(model_name)
+
+text = "La calidad del producto era justa"
+inputs = tokenizer(text, return_tensor = 'pt')
+outputs = model(**inputs)
+logits = outputs.logits
+
+predicted_class = torch.argmax(logits, dim=1).item()
+print(f'Predicted class index {predicted_cllass + 1} star.")
+```
+`Predicted class index: 3 star.`
+
+De manera similar, existe una `AutoClass` para generación de texto: 
+
+```python3
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_name = 'gpt2'
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretraiend(model_name)
+
+prompt = ' Esto es un ejemplo simple de generación de texto '
+inputs = tokenizer.encode(prompt, return_tensor = 'pt')
+output = model.generate(inpiuts, max_legnth = 256)
+
+generated_text = tokenizer.decode(output[0], skip_especial_token = True)
+```
+
+### ** 12. ¿Cómo se entrena un LLM para generación de texto?
+La predicción de la siguiente palabra es una forma de tarea autosupervisada que requieren ejemplos de entrenamiento que consisten en pares de secuencias de *input-label*. 
+
+Un *input* es una secuencia que representa una parte de un texto. 
+La secuencia objetivo o *label* es la misma que la de entrada pero desplazada en un token a la izquierda para que aparezca el token inmediatamente siguiente en la secuencia original
+
+Por ejemplo:
 
