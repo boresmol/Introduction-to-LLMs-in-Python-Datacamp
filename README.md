@@ -580,3 +580,51 @@ translated_ids = model-generate(input_ids)
 translated_text = tokenizer.decode(translated_ids[0], skip_special_tokens = True)
 ```
 
+### ** 14. LLMs para *Question-Answering (QA)* **
+Las tareas de QA o control de calidad pueden adoptar varias formas:
+* *Extractive QA*: El LLM recibe una pregunta junto a un contexto y la respuesta debe extraerse directamente del contexto. Esta es una tarea de aprendizaje supervisada que requiere de una arquitectura ***encoder only***
+* *Open Generative QA*: Recibe un contexto pero aplica la generación del lenguaje para construir la respuesta con la ayuda del contexto, en lugar de extraer la respuesta como parte del contexto. Se basa en arquitecturas ***encoder-decoder***
+* *Closed generative QA*: Implica una arquitectura ***decoder only*** genera la respuesta sobre el conocimiento del modeelo, sin ningún contexto.
+
+##### Extractive QA
+Esta tarea se puede ver como una tarea supervisada de clasificación. La pregunta preprocesada y el contexto se aprueban conjuntamente como entrada al LLM que devuelve algunas salidas sin procesar o logits. Hay dos logits de salida generados para cada token de entrada en la secuencia de entrada, indicando la probabilidad de que el token constituya la posición inicial o final del intervalo de respuestas. Los logits sin procesar se procesan posteriormente para obtener la predicción real o el intervallo de respuesta: una parte de la secuencia de entrada definida por las posiciones de token inicial y final que probablemente contengan la respuesta. Este intervalo de respuestas se obtiene como las posiciones de los logits incial y final con la mayor probabilidad combinada. Veamos el código:
+
+```python3
+from transformers import AutoTokenizer, AutoModelForQuestionAnswering
+
+model_ckp = 'deepset/minilm-uncased-squad2'
+tokenizer = AutoTokenizer.from_pretrained(model_ckp)
+
+question = 'Cual es el sabor del wasabi?'
+context = 'La cocina japonesa captura la esencia de una armoniosa fusion entre los ingredientes frescos y las técnicas de cocina tradicional, todo proporcionado por el aromático sabor del wasabi'
+
+inputs = tokenizer(question,context, return_tensors = 'pt')
+
+model = AutoModelForQuestionAnswering.from_pretrained(model_ckp)
+
+with torch.no_grad():
+   outputs = model(**inputs)
+
+stat_idx = torch-argmax(outputs.start_logits)
+end_idx = torch.argmax(outputs.end_logits) + 1
+
+answer_span = inputs['inpiut_ids'][0][start_idx:end_idx]
+answer = tokenizer.decode(answer_span)
+```
+
+### ** 15. LLM fine-tuning y Transfer Learning **
+En los anteriores capítulos hemos utilizado LLMs entrenados para una variedad de propósitos. Ahora vamos a ver como pueden ajustarse estos modelos para un caso de uso específico.
+El *fine tuning* implica tomar un modelo previamente entrenado y volver a entrenarlo para resolver una tarea posterior particular con datos de dominio específico. El objetivo es mejorar su desempeño para esa tarea.
+Por ejemplo, tomemos un modelo de resumen de propósito general que se ajusta a un conjunto de datos de artículos científicos de química y sus resúmenes para especializarse en resumir artículos de química.
+Hay dos enfoques de *fine tuning* diferentes dependiendo de como se actualizan los pesos del modelo:
+* *Full fine tuning*: Implica actualizar los pesos de todo el modelo.
+* *Partial fine tuning*: Los cuerpos en las capas inferiores del cuerpo del modelo que son responsables de la captura de la comprensión general del lenguaje permanece fija y se actualizan las capas específicas de la tarea solo en el encabezado del modelo.
+
+La elección del enfoque depende de su caso de uso específico, la cantidad de datos específicos de la tarea que se posee y las capacidades informáticas del Hardware.
+
+Un concepto estrechamente ligado al *fine tuning* es el ***Transfer Learning***. El *Transfer Learning* consiste en tomar un modelo entrenado previamente en una tarea y adaptarlo para una tarea diferente pero relacionada. En el contexto de los LLM, esto significa ajustar un conjunto de datos más pequeño pa<ra una tarea particular, como se vio anteriormente.
+
+¿Son el *fine tuning* y el *Transfer Learning* lo mismo?
+
+No exactamente. *Transfer Learning* es un paradigma general sobre el aprovechamiento del conocimiento obtenido en un dominio para mejorar el rendimiento en otro dominio relacionado. Esto puede hacerse mediante *fine tuning* pero también se puede hacer con otros enfoques:
+
