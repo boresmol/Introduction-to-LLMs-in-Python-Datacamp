@@ -372,5 +372,27 @@ Ya hemos visto como se construyen tanto el *encoder* como el *decoder* pero, ¿C
 * Los estados ocultos producidos por el codificador
 Esto es crucial para que el *decoder* 'mire hacia atrás' a la entrada para determinar que generar a continuación en la secuencia objetivo. 
 
+![decoder-cross-attention](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/decoder-encoder.png)
+
+Ahora el paso forward del decoder necesitará 2 máscaras: la máscara causal para la primera etapa de atención y la máscara de atención cruzada, que puede ser la máscara de relleno habitual como la que se utiliza en el codificador.
+
+Es importante destacar que la variable `y`de este método contiene las salidas del codificador, que se pasan a el mecanismo de atención cruzada como argumentos clave-valor, mientras que el flujo del decodificador asociado a la secuencia objetivo a generar solo adopta el rol de consulta de atención.
+```python3
+class DecoderLayer(nn.Module):
+   def __init__(self, d_model, num_heads, d_ff, dropout):
+      super(DecoderLayer, self).__init__()
+      self.self_attn = MultiHeadAttention(d_model, num_heads)
+      self.cross_attn = MultiHeadAttention(d_model, num_heads)
+      ...
+   def forward(self, x, y, causal_mask, cross_mask):
+      self_attn_output = self.self_attn(x,x,x, causal_mask)
+      x = self.norm1(x + self.dropout(self_attn_output)
+      cross_attn_output = self.cross_attn(x, y, y, cross_mask)
+      x = self.norm2(x + self.dropout(cross_attn_output)
+      ...
+```
+En definitiva, la arquitectura *encoder-decoder Transformer* queda así:
+
+
 
   
