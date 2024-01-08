@@ -628,3 +628,48 @@ Un concepto estrechamente ligado al *fine tuning* es el ***Transfer Learning***.
 
 No exactamente. *Transfer Learning* es un paradigma general sobre el aprovechamiento del conocimiento obtenido en un dominio para mejorar el rendimiento en otro dominio relacionado. Esto puede hacerse mediante *fine tuning* pero también se puede hacer con otros enfoques:
 
+![transf_learn](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/transfer_learning.png)
+
+* *Zero Shot Learning*: Es un enfoque popular cuando se disponen de pocos datos etiquetados. Un modelo está entrenado para generalizar a nuevas tareas nunca vistas durante el entrenamiento.
+* *One shot, few - shot learning*: Se expone el modelo a uno o pocos ejemplos específicos.
+
+#### Fine-Tuning un modelo preentrenado
+```python3
+import torch
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from datasets import load_dataset
+
+model_name = 'distilbert-base-uncased'
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels = 2)
+
+def tokenize_function(examples):
+   return tokenizer(examples["text"], padding = "max_length", truncation = True)
+
+data = load_dataset('imdb')
+tokenized_data = data.map(tokenize_function, batched = True)
+
+from transformer import Trainer, TrainingArguments
+
+training_args = TrainingArguments(
+      output_dir = "./smaller_bert_finetuned",
+      per_device_train_batch_size = 8,
+      num_train_epoch = 3,
+      evaluation_strategy="steps",
+      eval_steps = 500,
+      save_steps = 500,
+      logging_dir = "./logs")
+
+trainer = Trainer(
+      model = model,
+      args = training_args,
+      train_dataset = tokenized_datasets['train],
+      eval_dataset = tokenized_datasets['test']
+)
+
+trainer.train()
+
+model.save_pretrained('./my_bert_finetuned')
+tokenizer.save_pretrained('./my_tokenizer_finetuned')
+```
+
