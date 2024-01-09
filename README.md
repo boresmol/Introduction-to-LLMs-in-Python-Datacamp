@@ -707,3 +707,13 @@ La retroalimentación humana puede resultar crucial en el contexto de los LLM po
 * Un algoritmo de aprendizaje por refuerzo (por ejemplo, optimización de políticas próximas): Este se usa para guiar el proceso de optimización de LLM actualizando los pesos del modelo a maximizar las recompensas acumuladas esperadas, en función de la política aprendida por el modelo de recompensa.
 
 Este proceso suele ser iterativo: el LLM optimizado se utiliza para producir nuevos datos de texto, que luego se utilizan para volver a entrenar el modelo de recompensa y, posteriormente, seguir ajustando el LLM nuevamente mediante el aprendizaje por refuerzo.
+
+![rlhf](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/RLHF.png)
+
+Vamos a examinar como se construye un *Modelo de recompensa*:
+
+1. Tener un modelo LLM preentrenado que genere texto.
+    * Coleccionar muestras de los inputs-outputs del LLM
+2. Basado en procesos de anotación humana para calificar y clasificar estas muestras de LLM, se crea un conjunto de datos para entrenar un modelo de recompensa. Las instancias de capacitación consisten en pares de muestra-recompensa, incorporando así información de preferencias humanas en el proceso.
+3. Entrenar un Modelo de Recompensa, capaz de predecir la recompensa de un input-output de un LLM.
+4. Una vez entrenado, dada una secuencia de texto, el modelo de recompensa generará una predicción de recompensa escalar. Todo el ciclo se cierra mediante un algoritmo de aprendizaje por refuerzo, que se usa para optimizar el modelo de lenguaje original con respecto al modelo de recompensa.
