@@ -717,3 +717,48 @@ Vamos a examinar como se construye un *Modelo de recompensa*:
 2. Basado en procesos de anotación humana para calificar y clasificar estas muestras de LLM, se crea un conjunto de datos para entrenar un modelo de recompensa. Las instancias de capacitación consisten en pares de muestra-recompensa, incorporando así información de preferencias humanas en el proceso.
 3. Entrenar un Modelo de Recompensa, capaz de predecir la recompensa de un input-output de un LLM.
 4. Una vez entrenado, dada una secuencia de texto, el modelo de recompensa generará una predicción de recompensa escalar. Todo el ciclo se cierra mediante un algoritmo de aprendizaje por refuerzo, que se usa para optimizar el modelo de lenguaje original con respecto al modelo de recompensa.
+ 
+![reward_model](https://github.com/boresmol/Introduction-to-LLMs-in-Python-Datacamp/blob/main/reward_model.png)
+
+#### TRL: Transformer Reinforcement Learning
+Es una biblioteca de aprendizaje que se adapta a varios enfoques de RL para ajustar los LLM basados en Transformers. Vamos a enseñar como se añade un modelo de RL basado en PPO (*Proximal Policy Optimization*) que recibe del LLM un triplete: promt, respeusta y recompensa:
+
+```python3
+from trl import PPOTrainer, PPOConfig, create_reference_model, AutoModelForCausalLMWithValueHead
+from trl.core import respond_to_batch
+
+model = AutoModelForCausalLMWithValueHead.from_pretrained('gpt2')
+model_ref = create_reference_model(model)
+tokenizer = AutoTokenizer.from_pretrained('gpt2')
+if tokenizer.pad_token is None:
+   tokenizer.add_special_tokens({'pad_token':'[PAD]'})
+
+prompt = 'My plan today is to'
+input = tokenizer.encode(query_txt, return_tensors'pt')
+response = respond_to_batch(model,input)
+
+ppo_config = PPOConfig(batch_size = 1)
+ppo_trainer = PPOTrainer(ppo_config, model, model_ref, tokenizer)
+reward = [torch.tensor(1.0)]
+train_stats = ppo_trainer.step([input[0]], [response[0]], reward)
+```
+
+### **18.Retos y consideraciones éticas**
+En este punto se analizan algunos desafíos y consideraciones éticas asociadas con los LLM.
+
+##### Desafíos de los LLM en el mundo real
+Debido a su sotisficación y su potencia, los LLM no solo plantean desafíos comunes a cualquier sistema de IA, sino que también enfrentan algunos desafíos únicos:
+1. Uno está ligado a la accesibilidad global a las soluciones LLM, concretamente al permitir el soporte en varios idiomas. Esto implica abordar la diversidad lingüistica, la disponibilidad de recursos y garantizar una tranferibilidad efectiva entre idiomas con diferentes características.
+2. El dilema entre los LLM abiertos y cerrados implica lograr el equilibrio entre los beneficios del código abierto, la colaboración y la transparencia de los modelos.
+3. La ampliación de los LLM exige mayores capacidades de representación lingüistica, demanda computacional y requisitos de capacitación en términos de costo y acceso a los datos.
+4. Los sesgos son otros desafío importante, especialmente si los datos de entrenamiento están sesgados, lo que provoca modelos con mecanismos de generación del lenguaje injusto o discriminatorios.
+
+Además, entre los desafíos más grandes también encontramos:
+* Alucinaciones: se dice que un LLM alucina cuando genera información falsa o sin sentido, afirmando que es veraz o exacta.
+Las alucinaciones son difíciles de eliminar, pero existen estrategias prácticas para reducirlas:
+1. Garantizar que el modelo se base en datos diversos, incluidas varias perspectivas sobre el mismo tema.
+2. Auditorías de sesgo y técnicas de mitigación, como el remuestreo.
+3. *Fine tune* en casos de uso específico.
+4. *Prompt engineering*: El proceso de elaborar y perfeccionar indicaciones adecuadas para obtener respuestas del modelo precisas.
+
+
