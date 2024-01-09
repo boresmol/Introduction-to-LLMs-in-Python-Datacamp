@@ -695,4 +695,15 @@ Algunas de las métricas para tareas especiales de LLM son:
       results = perplexity.compute(model_id='gpt2', predictions = generated_text)
       ```
 * *ROUGE score* en resúmenes de texto: Cuantifica la superposición y similitud entre un texto resumido generado por el modelo y resúmenes de referencia proporcionados. Presta atención a aspectos como la co-ocurrencia de n-gramas o grupos de tokens consecutivos y la superposición de palabras. Rouge toma una colección de resúmenes previstos o resultados de LLM, como así uno o varios resúmenes de referencia proporcionados por humanos. ROUGE proporciona un conjunto de puntuaciones métricas que capturan diferentes aspectos de similitud del texto, como superposición de unigramas y bigramas, subsecuencias comunes más largas...
-* *BLEU score* para traducción: mide la calidad de la traducción entre la salida del LLM y referencias humanas.
+* *BLEU score* para traducción: mide la calidad de la traducción entre la salida del LLM y referencias humanas. El valor va entre `0-1`, indicando la similaridad a la referencia (cuanto más cercano a uno, mejor).
+* *METEOR score* para traducción: supera algunas limitaciones de *BLEU* y *ROUGE* incorporando más aspectos lingüisticos. Con estas variaciones se consigue lidiar con variaciones morfológicas, capturar palabras con significados similares y penalizar errores en el orden de las palabras. El valor va entre `0-1`y cuanto más alto mejor.
+* *Exact Match* en QA: es una métrica sensible. Vale `1` si el output del LLM es exactamente igual a la respuesta referencia y `0`en cualquier otro caso. Suele usarse en conjunto con el `F! score`.
+
+
+### **17.*Fine-Tuning* del modelo usando *feedback* humano**
+La retroalimentación humana puede resultar crucial en el contexto de los LLM por varias razones. Dado que las métricas no pueden capturar de forma correcta la calidad de la subjetividad o el contexto de un LLM, necesitamos retroalimentación humana, usando esta como función de pérdida. Así surge el **RLHF** o *Reinforcement Learning from Human Feedback*. Esto se basa en la idea de que un agente aprenda a tomar decisiones en base a 'premios', adoptando un comportamiento que le permita maximizar la cantidad de 'premios' a lo largo del tiempo. El RLHF consta de tres elementos:
+* Un *LLM* inicial: este LLM habrá sido entrenado previamente o incluso puede habérsele hecho *fine tuning* en un conjunto de datos específicos al problema.
+* Un modelo de recompensa (*Reward Model*): Un modelo de recompensa entrenado por separado según las preferencias humanas para aprender a asignar recompensas a los resultados LLM.
+* Un algoritmo de aprendizaje por refuerzo (por ejemplo, optimización de políticas próximas): Este se usa para guiar el proceso de optimización de LLM actualizando los pesos del modelo a maximizar las recompensas acumuladas esperadas, en función de la política aprendida por el modelo de recompensa.
+
+Este proceso suele ser iterativo: el LLM optimizado se utiliza para producir nuevos datos de texto, que luego se utilizan para volver a entrenar el modelo de recompensa y, posteriormente, seguir ajustando el LLM nuevamente mediante el aprendizaje por refuerzo.
